@@ -8,12 +8,12 @@ const {
   deleteGamer
 } = require('../services');
 
-const { generateGamer } = require('../utils/generateGamer');
+const { validateBody } = require('../utils/validateBody');
 
 const api = Router();
 
 api.get("/gamers", (req, res) => {
-  getGamers(req.query)
+  getGamers()
     .then(gamers => res.json(gamers))
     .catch((err) => {
       res.status(500);
@@ -31,12 +31,13 @@ api.get("/gamers/:name", (req, res) => {
     });
 });
 
-api.post("/gamers", (req, res) => {
-  const newGamer = generateGamer(req);
-  if (newGamer.message) {
-    res.status(400);
-    res.end(newGamer.message);
-    return;
+api.post("/gamers", validateBody, (req, res) => {
+  const newGamer = req.body;
+  if (newGamer.id) {
+    delete body.id;
+  }
+  if (newGamer.date) {
+    delete body.id;
   }
   createGamer(newGamer)
     .then(() => {
@@ -44,18 +45,20 @@ api.post("/gamers", (req, res) => {
       res.end("New gamer was added!");
     })
     .catch((err) => {
+      console.log(err)
       res.status(500);
       res.end("Access failed");
     });
 });
 
-api.put("/gamers/:id", (req, res) => {
+api.put("/gamers/:id", validateBody, (req, res) => {
   const id = req.params.id;
-  const newGamer = generateGamer(req);
-  if (newGamer.message) {
-    res.status(400);
-    res.end(newGamer.message);
-    return;
+  const newGamer = req.body;
+  if (newGamer.id) {
+    delete body.id;
+  }
+  if (newGamer.date) {
+    delete body.id;
   }
   updateGamer(id, newGamer)
     .then(() => {
