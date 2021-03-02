@@ -31,13 +31,12 @@ api.get("/gamers/:name", (req, res) => {
     });
 });
 
-api.post("/gamers", validateBody, (req, res) => {
-  const newGamer = req.body;
-  if (newGamer.id) {
-    delete body.id;
-  }
-  if (newGamer.date) {
-    delete body.id;
+api.post("/gamers", (req, res) => {
+  const newGamer = validateBody(req);
+  if (newGamer.message) {
+    res.status(400);
+    res.end(newGamer.message);
+    return;
   }
   createGamer(newGamer)
     .then(() => {
@@ -51,15 +50,14 @@ api.post("/gamers", validateBody, (req, res) => {
     });
 });
 
-api.put("/gamers/:id", validateBody, (req, res) => {
+api.put("/gamers/:id", (req, res) => {
+  const newGamer = validateBody(req);
+  if (newGamer.message) {
+    res.status(400);
+    res.end(newGamer.message);
+    return;
+  }
   const id = req.params.id;
-  const newGamer = req.body;
-  if (newGamer.id) {
-    delete body.id;
-  }
-  if (newGamer.date) {
-    delete body.id;
-  }
   updateGamer(id, newGamer)
     .then(() => {
       res.status(200);
