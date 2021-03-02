@@ -2,7 +2,7 @@ const Gamer = require('../models/gamer');
 
 exports.createGamer = async function ({ name, time, bombs } = {}) {
   const newDate = new Date();
-  const date = newDate.toLocaleString('');
+  const date = newDate.toLocaleString();
   const gamer = new Gamer({ name, date, time, bombs });
   return gamer.save();
 }
